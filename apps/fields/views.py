@@ -1,47 +1,42 @@
 from rest_framework.decorators import api_view
-from apps.orders import schemas as schm
-from apps.orders import services as svc
+from apps.fields import schemas as schm
+from apps.fields import services as svc
 from apps.users.check_auth import permission
 
 
-@schm.create_order_schema
+@schm.create_field_schema
 @api_view(['POST'])
-@permission(['admin'])
-def create_order(request):
-    return svc.OrderService(request).create_order()
+@permission(['admin', 'owner'])
+def create_field(request):
+    return svc.FieldService(request).create_field()
 
 
-@schm.update_order_schema
+@schm.update_field_schema
 @api_view(['PUT'])
-@permission(['admin'])
-def update_order(request, pk):
-    return svc.OrderService(request).update_order(pk)
+@permission(['admin', 'owner'])
+def update_field(request, pk):
+    return svc.FieldService(request).update_field(pk)
 
 
-@schm.delete_order_schema
+@schm.delete_field_schema
 @api_view(['DELETE'])
-@permission(['admin'])
-def delete_order(request, pk):
-    return svc.OrderService(request).delete_order(pk)
+@permission(['admin', 'owner'])
+def delete_field(request, pk):
+    return svc.FieldService(request).delete_field(pk)
 
 
-@schm.get_orders_schema
+@schm.get_fields_schema
 @api_view(['GET'])
-@permission(['admin', 'driver'])
-def get_orders(request):
-    return svc.OrderService(request).get_orders()
+@permission(['admin', 'owner', 'user'])
+def get_fields(request):
+    return svc.FieldService(request).get_fields()
 
 
-@schm.get_order_schema
+@schm.get_field_schema
 @api_view(['GET'])
-@permission(['admin', 'driver'])
-def get_order(request, pk):
-    return svc.OrderService(request).get_order(pk)
+@permission(['admin', 'owner', 'user'])
+def get_field(request, pk):
+    return svc.FieldService(request).get_field(pk)
 
 
-@schm.accept_order_schema
-@api_view(['POST'])
-@permission(['driver'])
-def accept_order(request, pk):
-    return svc.OrderService(request).accept_order(pk)
 

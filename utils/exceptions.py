@@ -26,6 +26,7 @@ class CustomValidationError(APIException):
 class ErrorCodes(IntegerChoices):
     SOMETHING_WENT_WRONG = 400_001
     USER_NOT_FOUND = 400_002
+    FIELD_NOT_FOUND = 400_003
 
     #BRANCH PERMISSION
     PERMISSION_DENIED_DRIVER = 400_040
@@ -36,6 +37,14 @@ class ErrorCodes(IntegerChoices):
 
     #INVALID
     INVALID_STATUS_ACCESSLOG= 400_080
+    INVALID_FILE_FORMAT= 400_081
+    INVALID_DATE_RANGE= 400_082
+
+    #required
+    FIELD_REQUIRED = 400_090
+
+    #conflict
+    BOOKING_CONFLICT = 400_100
 
 
 def exception(exp_class, error_code, message) -> APIException:
@@ -77,7 +86,7 @@ def custom_exception_handler(exc, context):
     if response is not None:
         return response
     if os.getenv('IS_SERVER'):
-        send_me(f"TaxiProject:\n{error_details}")
+        send_me(f"FootballProject:\n{error_details}")
     return Response(
         {
             "error_code": "500_500",

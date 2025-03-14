@@ -69,6 +69,15 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
         model = users_models.CustomUser
         fields = ['phone', 'full_name', 'role', 'password']
 
+    @transaction.atomic
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = users_models.CustomUser.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        users_models.CustomUserPasswordLog.objects.update_or_create(user=user, defaults={"raw_password": password})
+        return user
+
 
 class CustomUserUpdateSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(max_length=9, min_length=9, required=False)
@@ -80,3 +89,14 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
         model = users_models.CustomUser
         fields = ['phone', 'full_name', 'role', 'password']
         extra_kwargs = {'password': {'write_only': True}}
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+
+        if password:
+            instance.set_password(password)
+            users_models.CustomUserPasswordLog.objects.update_or_create(user=instance,
+                                                                        defaults={"raw_password": password})
+        instance.save()
+        return instance

@@ -4,9 +4,10 @@ import os
 from uuid import uuid4
 from django.core.files.base import ContentFile
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.core.files.storage import default_storage
 
 
-class HomeworkFileMediaStorage(S3Boto3Storage):
+class ImageFileMediaStorage(S3Boto3Storage):
     location = "media"
     file_overwrite = False
 
@@ -27,11 +28,11 @@ def base64_to_file(base64_string: str, name: str = 'image', folder: str = 'icon'
 
         file_content = ContentFile(base64.b64decode(file_str))
 
-        storage = HomeworkFileMediaStorage()
-        saved_path = storage.save(file_name, file_content)
-        return saved_path
+        saved_path = default_storage.save(file_name, file_content)
+
+        return default_storage.url(saved_path)
     except Exception as e:
-        raise ValueError(f"Invalid base64 string: {e}")
+            raise ValueError(f"Invalid base64 string: {e}")
 
 
 def delete_old_file(instance, field: str) -> None:

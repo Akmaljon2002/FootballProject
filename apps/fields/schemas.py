@@ -1,59 +1,58 @@
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from apps.orders import serializers as slr
-from apps.orders.choices import OrderStatusChoice
+from apps.fields import serializers as slr
 from utils.exceptions import resp
 
-create_order_schema = extend_schema(
-    summary='Create Order',
-    request=slr.OrderCreateSerializer(),
+create_field_schema = extend_schema(
+    summary='Create Field',
+    request=slr.FieldCreateSerializer(),
     responses=resp(201)
 )
 
-update_order_schema = extend_schema(
-    summary='Update Order',
-    request=slr.OrderUpdateSerializer(),
+update_field_schema = extend_schema(
+    summary='Update Field',
+    request=slr.FieldUpdateSerializer(),
     responses=resp(200)
 )
 
-delete_order_schema = extend_schema(
-    summary='Delete Order',
+delete_field_schema = extend_schema(
+    summary='Delete Field',
     request=None,
     responses=resp(204)
 )
 
-get_orders_schema = extend_schema(
-    summary='Orders',
+get_fields_schema = extend_schema(
+    summary="Get Fields (Available + All Fields)",
     request=None,
-    responses=resp(200, slr.OrderSerializer),
+    responses=resp(200, slr.FieldSerializer(many=True)),
     parameters=[
         OpenApiParameter(
-            name="status",
-            description="Filter by order status",
+            name="start_time",
+            description="Start time of the desired booking period (format: YYYY-MM-DD HH:MM:SS).",
             required=False,
-            type=str,
-            enum=[choice.value for choice in OrderStatusChoice]
+            type=OpenApiTypes.DATETIME
         ),
         OpenApiParameter(
-            name="route",
-            description="Filter by route ID",
+            name="end_time",
+            description="End time of the desired booking period (format: YYYY-MM-DD HH:MM:SS).",
             required=False,
-            type=str
+            type=OpenApiTypes.DATETIME
         ),
         OpenApiParameter(
-            name="seat_option",
-            description="Filter by seat_option ID",
+            name="lat",
+            description="User's latitude for sorting fields by proximity.",
             required=False,
-            type=str
+            type=OpenApiTypes.FLOAT
         ),
         OpenApiParameter(
-            name="passenger_count",
-            description="Filter by passenger_count",
+            name="lon",
+            description="User's longitude for sorting fields by proximity.",
             required=False,
-            type=int
+            type=OpenApiTypes.FLOAT
         ),
         OpenApiParameter(
-            name="date",
-            description="Filter by exam creation date",
+            name="owner",
+            description="Filter by owner ID",
             required=False,
             type=str
         ),
@@ -78,14 +77,8 @@ get_orders_schema = extend_schema(
     ]
 )
 
-get_order_schema = extend_schema(
-    summary='Order',
+get_field_schema = extend_schema(
+    summary='Field',
     request=None,
-    responses=resp(200, slr.OrderSerializer)
-)
-
-accept_order_schema = extend_schema(
-    summary='Accept Order',
-    request=None,
-    responses=resp(200)
+    responses=resp(200, slr.FieldSerializer)
 )

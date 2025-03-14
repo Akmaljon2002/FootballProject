@@ -1,11 +1,10 @@
 from django.urls import path
-from apps.orders import views
+from apps.fields import views
 
 urlpatterns = [
-    path('create/', views.create_order, name='create_order'),
-    path('<int:pk>/update/', views.update_order, name='update_order'),
-    path('<int:pk>/delete/', views.delete_order, name='delete_order'),
-    path('', views.get_orders, name='get_orders'),
-    path('order/<int:pk>', views.get_order, name='get_order'),
-    path('order/accept/<int:pk>', views.accept_order, name='order_accept'),
+    path('create/', views.create_field, name='create_field'),
+    path('<int:pk>/update/', views.update_field, name='update_field'),
+    path('<int:pk>/delete/', views.delete_field, name='delete_field'),
+    path('', views.get_fields, name='get_fields'),
+    path('field/<int:pk>', views.get_field, name='get_field'),
 ]
