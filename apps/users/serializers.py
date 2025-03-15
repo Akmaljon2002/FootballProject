@@ -4,19 +4,6 @@ from rest_framework import serializers
 from apps.users.check_auth import get_refresh_token, blacklist
 from apps.users import models as users_models
 from apps.users.choices import UserRoleChoice
-from utils.exceptions import raise_error, ErrorCodes
-
-
-class StudentForUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = users_models.CustomUser
-        fields = [
-            'id',
-            'phone',
-            'full_name',
-            'role',
-        ]
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

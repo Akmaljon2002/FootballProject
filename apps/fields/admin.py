@@ -5,7 +5,7 @@ from .models import Field
 
 @admin.register(Field)
 class FieldAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'address', 'contact', 'price_per_hour', 'show_images', 'latitude', 'longitude')
+    list_display = ('id', 'name', 'owner', 'address', 'contact', 'price_per_hour', 'show_images', 'latitude', 'longitude')
     list_filter = ('owner', 'price_per_hour')
     search_fields = ('name', 'address', 'contact', 'owner__username')
     ordering = ('-id',)

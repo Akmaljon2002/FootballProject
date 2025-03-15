@@ -28,7 +28,7 @@ class SendErrorToBotMiddleware:
             url = f"https://api.telegram.org/bot{token}/sendMessage"
             traceback_info = traceback.format_exc()
             exception_type = type(exception).__name__
-            message = f"TaxiProject\n{exception_type}: {str(exception)}\n\n{traceback_info}\n\nTaxiProject"
+            message = f"FootballProject\n{exception_type}: {str(exception)}\n\n{traceback_info}\n\nFootballProject"
             data = {
                 'chat_id': chat_id,
                 'text': message

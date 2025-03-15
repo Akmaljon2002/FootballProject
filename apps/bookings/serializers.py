@@ -2,10 +2,24 @@ from rest_framework import serializers
 from apps.bookings.models import Booking
 from apps.users.models import CustomUser
 from utils.exceptions import raise_error, ErrorCodes
+from apps.users import models as users_models
+
+
+class UserForBookingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = users_models.CustomUser
+        fields = [
+            'id',
+            'phone',
+            'full_name',
+        ]
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), required=False)
+    user = UserForBookingSerializer(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source="user", write_only=True,
+                                                 required=False)
 
     class Meta:
         model = Booking
@@ -23,3 +37,8 @@ class BookingSerializer(serializers.ModelSerializer):
             raise_error(ErrorCodes.BOOKING_CONFLICT, "This time slot is already booked.")
 
         return data
+
+    def create(self, validated_data):
+        if 'user' not in validated_data:
+            validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
